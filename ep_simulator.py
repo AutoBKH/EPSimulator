@@ -1,5 +1,6 @@
 from flask import Flask
 from flask import request
+import json
 
 app = Flask(__name__)
 
@@ -12,7 +13,10 @@ def sanity():
 @app.route('/publish', methods=['POST'])
 def publish():
     if request.method == 'POST':
-        return request.json
+        if request.is_json:
+            return request.json
+        else:
+            return str(request.data, "utf-8")
     else:
         return f"called publish with {request.method}"
 
