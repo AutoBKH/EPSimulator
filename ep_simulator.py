@@ -21,7 +21,7 @@ def publish():
         return f"called publish with {request.method}"
 
 
-@app.route('/config', methods=['POST', 'GET'])
+# @app.route('/config', methods=['POST', 'GET'])
 def config():
     if request.method == 'POST':
         if request.is_json:
@@ -31,6 +31,16 @@ def config():
             return str(request.data, "utf-8")
     elif request.method == 'GET':
         return f"The current configuration is: "
+
+
+def about():
+    return "about page"
+
+
+app.add_url_rule('/config', view_func=config, methods=['POST', 'GET'])
+app.add_url_rule('/about', view_func=about, methods=['POST', 'GET'])
+# app.view_functions['about'] = about
+
 
 
 @app.route('/start', methods=['POST'])
@@ -52,9 +62,10 @@ def stop_simulator():
 @app.route('/restart', methods=['POST'])
 def restart_simulator():
     if request.method == 'POST':
-        return f"Stopping simulator"
+        return f"Restarted simulator"
     else:
         return f"Unrecognized request"
 
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5050)
