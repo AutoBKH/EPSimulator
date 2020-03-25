@@ -1,6 +1,8 @@
 from flask import Flask
 from flask import request
+from event import Event
 import json
+import pickle
 
 app = Flask(__name__)
 
@@ -36,9 +38,22 @@ def config():
 def about():
     return "about page"
 
+def send_event():
+    if request.is_json:
+        print(f"Changing configuration")
+        return request.json
+    else:
+        unpickle = Event(pickle.loads(request.data))
+
+        return str(request.data, "utf-8")
+    return f"Received send_event"
+
+
 
 app.add_url_rule('/config', view_func=config, methods=['POST', 'GET'])
 app.add_url_rule('/about', view_func=about, methods=['POST', 'GET'])
+app.add_url_rule('/send_event', view_func=send_event, methods=['POST'])
+
 # app.view_functions['about'] = about
 
 
