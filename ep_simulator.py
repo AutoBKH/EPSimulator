@@ -1,8 +1,5 @@
-from flask import Flask
-from flask import request
-from event import Event
-import json
-import pickle
+from flask import Flask, request, jsonify
+import jsonpickle
 
 app = Flask(__name__)
 
@@ -40,14 +37,13 @@ def about():
 
 def send_event():
     if request.is_json:
-        print(f"Changing configuration")
+        print(f"called send_event")
         return request.json
     else:
-        unpickle = Event(pickle.loads(request.data))
-
-        return str(request.data, "utf-8")
-    return f"Received send_event"
-
+        unpickle = jsonpickle.decode(request.data)
+        print(unpickle)
+        return jsonify(message=unpickle["message"],
+                       send_to=unpickle["send_to"])
 
 
 app.add_url_rule('/config', view_func=config, methods=['POST', 'GET'])
